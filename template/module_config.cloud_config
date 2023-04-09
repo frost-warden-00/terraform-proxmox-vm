@@ -1,0 +1,49 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+
+# APT fails to acquire GPG keys if package dirmngr is missing
+bootcmd:
+  - [ cloud-init-per, once, dirmngr-aptupdate, apt-get, update ]
+  - [ cloud-init-per, once, dirmngr-aptinstall, apt-get, install, dirmngr, -y ]
+  - [ cloud-init-per, once, dirmngr-aptinstall, apt-get, install, gnupg2, -y ]
+
+
+packages:
+  - jq
+  - curl
+  - qemu-guest-agent
+  - nfs-common
+  - python3
+  - python3-pip
+  - apt-transport-https
+  - net-tools
+  - vim
+  - wget
+  - rsyslog
+  - zip
+  - pigz
+  - gcc
+  - rsync
+  - rclone
+  - gcc
+  - unzip
+  - git
+  - sshpass
+  - ntfs-3g
+
+users:
+  - name: demi_fiend
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh_authorized_keys:
+      - ${ssh_key}
+
+preserve_hostname: false
+manage_etc_hosts: false
+fqdn: ${hostname}
+
+runcmd:
+ - [ pip3, install, glances]
